@@ -9,14 +9,10 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.preprocessing import LabelEncoder
 import numpy as np
 
-# Load the data
-train_df = pd.read_csv('../input/train.csv', header=0)
-test_df = pd.read_csv('../input/test.csv', header=0)
-submission_df = pd.read_csv('../input/gender_submission.csv', header=0)
+train_df = pd.read_csv('Data/train.csv', header=0)
+test_df = pd.read_csv('Data/test.csv', header=0)
+submission_df = pd.read_csv('Data/gender_submission.csv', header=0)
 
-# We'll impute missing values using the median for numeric columns and the most
-# common value for string columns.
-# This is based on some nice code by 'sveitser' at http://stackoverflow.com/a/25562948
 from sklearn.base import TransformerMixin
 class DataFrameImputer(TransformerMixin):
     def fit(self, X, y=None):
@@ -30,8 +26,7 @@ class DataFrameImputer(TransformerMixin):
 feature_columns_to_use = ['Pclass','Sex','Age','Fare','Parch']
 nonnumeric_columns = ['Sex']
 
-# Join the features from train and test together before imputing missing values,
-# in case their distribution is slightly different
+# 把训练集和测试集的数据合在一起然后去处理缺失值，避免缺失值处理导致训练集和测试集的区别
 big_X = train_df[feature_columns_to_use].append(test_df[feature_columns_to_use])
 big_X_imputed = DataFrameImputer().fit_transform(big_X)
 
