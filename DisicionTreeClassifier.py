@@ -30,34 +30,27 @@ nonnumeric_columns = ['Sex']
 big_X = train_df[feature_columns_to_use].append(test_df[feature_columns_to_use])
 big_X_imputed = DataFrameImputer().fit_transform(big_X)
 
-# XGBoost doesn't (yet) handle categorical features automatically, so we need to change
-# them to columns of integer values.
-# See http://scikit-learn.org/stable/modules/preprocessing.html#preprocessing for more
-# details and options
+# 量化非数值型的数据，比如说male和female转化为1和0
 le = LabelEncoder()
 for feature in nonnumeric_columns:
     big_X_imputed[feature] = le.fit_transform(big_X_imputed[feature])
 
-# Prepare the inputs for the model
+# 把处理好的数据集分成训练集和测试集
 train_X = big_X_imputed[0:train_df.shape[0]].as_matrix()
 test_X = big_X_imputed[train_df.shape[0]::].as_matrix()
 train_y = train_df['Survived']
 
-# You can experiment with many other options here, using the same .fit() and .predict()
-# methods; see http://scikit-learn.org
-# This example uses the current build of XGBoost, from https://github.com/dmlc/xgboost
+# 模型训练和预测
 # gbm = xgb.XGBClassifier(max_depth=3, n_estimators=300, learning_rate=0.05).fit(train_X, train_y)
 # predictions = gbm.predict(test_X)
 rcl = DecisionTreeClassifier()
 rcl.fit(train_X, train_y)
 predictions = rcl.predict(test_X)
 
-# Kaggle needs the submission to have a certain format;
-# see https://www.kaggle.com/c/titanic-gettingStarted/download/gendermodel.csv
-# for an example of what it's supposed to look like.
+# 把预测结果输出到当前目录的submission.csv文件中
 submission = pd.DataFrame({ 'PassengerId': test_df['PassengerId'],
                             'Survived': predictions })
 submission.to_csv("submission.csv", index=False)
 
 result = submission_df.as_matrix()[:, 1] == predictions
-print 'Recall:%.2f%%'% float(sum(result)*100.0/len(result))
+print 'Recall:%.2f%%'% float(sum(result)*100.0/result.size)
