@@ -53,5 +53,4 @@ submission = pd.DataFrame({ 'PassengerId': test_df['PassengerId'],
                             'Survived': predictions })
 submission.to_csv("submission.csv", index=False)
 
-result = submission_df.as_matrix()[:, 1] == predictions
-print 'Recall:%.2f%%'% float(sum(result)*100.0/result.size)
+print 'Score:%.2f' % dtc.score(test_X, submission_df.as_matrix()[:, 1])
