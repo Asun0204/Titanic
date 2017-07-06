@@ -26,7 +26,7 @@ class DataFrameImputer(TransformerMixin):
 feature_columns_to_use = ['Pclass','Sex','Age','Fare','Parch']
 nonnumeric_columns = ['Sex']
 
-# 把训练集和测试集的数据合在一起然后去处理缺失值，避免缺失值处理导致训练集和测试集的区别
+# 把训练集和测试集的数据合在一起然后去处理缺失值，避免分别处理缺失值导致训练集和测试集的分布不同
 big_X = train_df[feature_columns_to_use].append(test_df[feature_columns_to_use])
 big_X_imputed = DataFrameImputer().fit_transform(big_X)
 
@@ -43,9 +43,10 @@ train_y = train_df['Survived']
 # 模型训练和预测
 # gbm = xgb.XGBClassifier(max_depth=3, n_estimators=300, learning_rate=0.05).fit(train_X, train_y)
 # predictions = gbm.predict(test_X)
-rcl = DecisionTreeClassifier()
-rcl.fit(train_X, train_y)
-predictions = rcl.predict(test_X)
+# 决策树分类
+dtc = DecisionTreeClassifier(random_state=0, criterion='gini', max_leaf_nodes=10)
+dtc.fit(train_X, train_y)
+predictions = dtc.predict(test_X)
 
 # 把预测结果输出到当前目录的submission.csv文件中
 submission = pd.DataFrame({ 'PassengerId': test_df['PassengerId'],
