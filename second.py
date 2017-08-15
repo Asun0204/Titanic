@@ -118,10 +118,10 @@ for train, test in folder.split(titanic['Age']):
     # Make predictions for each algorithm on each fold
     for alg, predictors in algorithms:
         # Fit the algorithm on the training data.
-        alg.fit(titanic[predictors].iloc[train,:], train_target)
+        alg.fit(titanic[predictors].iloc[train, :], train_target)
         # Select and predict on the test fold.
         # The .astype(float) is necessary to convert the dataframe to all floats and avoid an sklearn error.
-        test_predictions = alg.predict_proba(titanic[predictors].iloc[test,:].astype(float))[:,1]
+        test_predictions = alg.predict_proba(titanic[predictors].iloc[test,:].astype(float))[:, 1]
         full_test_predictions.append(test_predictions)
     # Use a simple ensembling scheme -- just average the predictions to get the final classification.
     test_predictions = (full_test_predictions[0] + full_test_predictions[1]) / 2
