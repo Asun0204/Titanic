@@ -136,11 +136,7 @@ predictions = np.concatenate(predictions, axis=0)
 # Compute accuracy by comparing to the training data.
 accuracy = sum(predictions[predictions == titanic["Survived"]]) / len(predictions)
 
-# 在测试集上匹配我们的变化
-titanic_test = pd.read_csv('Data/test.csv')
-
 # 处理测试集
-titanic_test = pd.read_csv("Data/test.csv")
 titanic_test['Age'] = titanic_test['Age'].fillna(titanic_test['Age'].median())
 titanic_test['Fare'] = titanic_test['Fare'].fillna(titanic_test['Fare'].median())
 titanic_test.loc[titanic_test['Sex'] == 'male', 'Sex'] = 0
