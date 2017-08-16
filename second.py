@@ -60,7 +60,6 @@ titanic.loc[titanic['Embarked'] == 'S', 'Embarked'] = 0
 titanic.loc[titanic['Embarked'] == 'C', 'Embarked'] = 1
 titanic.loc[titanic['Embarked'] == 'Q', 'Embarked'] = 2
 
-
 # 生成新特征
 # Generating a familysize column
 titanic["FamilySize"] = titanic["SibSp"] + titanic["Parch"]
@@ -68,7 +67,6 @@ titanic["FamilySize"] = titanic["SibSp"] + titanic["Parch"]
 titanic["NameLength"] = titanic["Name"].apply(lambda x: len(x))
 # Get all the titles and print how often each one occurs.
 titles = titanic["Name"].apply(get_title)
-
 # Map each title to an integer.  Some titles are very rare, and are compressed into the same codes as other titles.
 title_mapping = {"Mr": 1, "Miss": 2, "Mrs": 3, "Master": 4, "Dr": 5, "Rev": 6, "Major": 7, "Col": 7, "Mlle": 8, "Mme": 8, "Don": 9, "Lady": 10, "Countess": 10, "Jonkheer": 10, "Sir": 9, "Capt": 7, "Ms": 2}
 for k, v in title_mapping.items():
@@ -121,7 +119,7 @@ for train, test in folder.split(titanic['Age']):
         alg.fit(titanic[predictors].iloc[train, :], train_target)
         # Select and predict on the test fold.
         # The .astype(float) is necessary to convert the dataframe to all floats and avoid an sklearn error.
-        test_predictions = alg.predict_proba(titanic[predictors].iloc[test,:].astype(float))[:, 1]
+        test_predictions = alg.predict_proba(titanic[predictors].iloc[test, :].astype(float))[:, 1]
         full_test_predictions.append(test_predictions)
     # Use a simple ensembling scheme -- just average the predictions to get the final classification.
     test_predictions = (full_test_predictions[0] + full_test_predictions[1]) / 2
